@@ -6,32 +6,44 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CdnHandler implements HttpHandler {
+
+    public String rootPath;
+
+    public CdnHandler(String rootPath) {
+        this.rootPath = rootPath;
+    }
+
     @Override
     public void handle(HttpExchange t) throws IOException {
-        String path = t.getRequestURI().getPath();
+        String path = t.getRequestURI().getPath().replaceFirst("^/cdn", "");
+        String filePath = rootPath + path;
 
-        String filePath = "." + path; // TODO: пока что из корня проекта и из папки cdn, надо исправить
-        System.out.println(filePath);
+        System.out.println(path);
 
         File file = new File(filePath);
-
         if (file.isDirectory()) {
             List<String> fileNames = new ArrayList<>();
             for (File f : file.listFiles()) {
-                fileNames.add(f.getName());
+                fileNames.add(
+                        "<a href=\"./" +
+                                f.getName() +
+                                (f.isDirectory() ? "/" : "") +
+                                "\">" + f.getName() + "</a>");
             }
 
-            String response = String.join("\n", fileNames);
+            String response = String.join("<br>", fileNames);
             t.sendResponseHeaders(200, response.length());
             try (OutputStream os = t.getResponseBody()) {
                 os.write(response.getBytes());
             }
         } else if (file.exists() && file.isFile()) {
+            t.getResponseHeaders().set("Content-Type", "text/plain; charset=UTF-8");
             t.sendResponseHeaders(200, file.length());
             try (OutputStream os = t.getResponseBody()) {
                 Files.copy(file.toPath(), os);
