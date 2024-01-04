@@ -61,8 +61,8 @@ public class Database {
         try {
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("SELECT \n" + //
-                    "    table_name as \"Таблица\",\n" + //
-                    "    column_name as \"Поле\"\n" + //
+                    "    table_name as \"Table\",\n" + //
+                    "    column_name as \"Column\"\n" + //
                     "FROM \n" + //
                     "    information_schema.columns\n" + //
                     "WHERE \n" + //

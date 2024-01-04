@@ -14,6 +14,7 @@ public class ApiHandler implements HttpHandler {
         Database.preset();
         Database database = new Database("VloBo", " 1");
         String response = database.basecheck();
+        t.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
         t.sendResponseHeaders(200, response.length());
         try (OutputStream os = t.getResponseBody()) {
             os.write(response.getBytes());

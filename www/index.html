@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+</head>
+
+<body>
+    <table id="dataTable" border="1">
+        <!-- Таблица будет создана здесь -->
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Выполняем запрос к серверу
+            fetch('http://localhost:8080/api/')
+                .then(response => response.json())
+                .then(data => {
+                    // Создаем таблицу на основе JSON-данных
+                    createTable(data);
+                })
+                .catch(error => console.error('Ошибка при получении данных:', error));
+
+            // Функция для создания таблицы
+            function createTable(data) {
+                var table = document.getElementById('dataTable');
+
+                // Создаем заголовок таблицы
+                var thead = document.createElement('thead');
+                var headerRow = document.createElement('tr');
+                for (var key in data[0]) {
+                    var th = document.createElement('th');
+                    th.textContent = key;
+                    headerRow.appendChild(th);
+                }
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+
+                // Создаем тело таблицы
+                var tbody = document.createElement('tbody');
+                data.forEach(function (rowData) {
+                    var row = document.createElement('tr');
+                    for (var key in rowData) {
+                        var cell = document.createElement('td');
+                        cell.textContent = rowData[key];
+                        row.appendChild(cell);
+                    }
+                    tbody.appendChild(row);
+                });
+                table.appendChild(tbody);
+            }
+        });
+    </script>
+</body>
+
+</html>
