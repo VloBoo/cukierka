@@ -1,13 +1,24 @@
 package by.vlobo;
 
-public class App 
-{
-    public static void main(String[] args) throws Exception
-    {
-        //Database.preset();
-        //Database database = new Database("VloBo", "   1");
-        //System.out.println(database.basecheck());
-        Server echoServer = new Server();
-        
+public class App {
+    private Server server;
+    private Database database;
+
+    public App() {
+
+        database = new Database("VloBo", " 1");
+
+    }
+
+    public void start() {
+        server = new Server(this);
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public Database getDatabase() {
+        return database;
     }
 }

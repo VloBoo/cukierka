@@ -1,12 +1,14 @@
 package by.vlobo.handlers;
 
 import com.sun.net.httpserver.HttpHandler;
+
+import by.vlobo.App;
+
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.List;
 public class CdnHandler implements HttpHandler {
 
     public String rootPath;
+    private App app;
 
-    public CdnHandler(String rootPath) {
+    public CdnHandler(String rootPath, App app) {
         this.rootPath = rootPath;
+        this.app = app;
     }
 
     @Override

@@ -1,6 +1,9 @@
 package by.vlobo.handlers;
 
 import com.sun.net.httpserver.HttpHandler;
+
+import by.vlobo.App;
+
 import com.sun.net.httpserver.HttpExchange;
 
 import java.io.File;
@@ -9,6 +12,13 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 
 public class WwwHandler implements HttpHandler {
+
+    private App app;
+
+    public WwwHandler(App app) {
+        this.app = app;
+    }
+
     @Override
     public void handle(HttpExchange t) throws IOException {
         File file = new File("www/index.html");

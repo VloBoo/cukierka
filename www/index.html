@@ -13,8 +13,22 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            var requestData = {
+                // Замените этими данными на свои
+                key: 'CheckDatabase',
+                auth: 'null'
+            };
+
+            // Опции для запроса
+            var requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            };
             // Выполняем запрос к серверу
-            fetch('http://localhost:8080/api/')
+            fetch('http://localhost:8080/api/', requestOptions)
                 .then(response => response.json())
                 .then(data => {
                     // Создаем таблицу на основе JSON-данных
