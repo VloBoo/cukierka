@@ -7,7 +7,7 @@
 
   <groupId>by.vlobo</groupId>
   <artifactId>cukierka</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
 
   <name>cukierka</name>
   <!-- FIXME change it to the project's website -->
@@ -35,13 +35,7 @@
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
       <version>20231013</version>
-  </dependency>
-  <dependency>
-    <groupId>org.reflections</groupId>
-    <artifactId>reflections</artifactId>
-    <version>0.9.12</version>
-</dependency>
-
+    </dependency>
   </dependencies>
 
   <build>

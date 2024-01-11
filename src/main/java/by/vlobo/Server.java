@@ -19,7 +19,7 @@ public class Server {
             HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
             server.createContext("/api", new ApiHandler(app));
             server.createContext("/cdn", new CdnHandler(".", app));
-            server.createContext("/", new WwwHandler(app));
+            server.createContext("/", new WwwHandler(".", app));
             server.setExecutor(null);
             server.start();
         } catch (IOException e) {

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CdnHandler implements HttpHandler {
 
-    public String rootPath;
+    private String rootPath;
     private App app;
 
     public CdnHandler(String rootPath, App app) {

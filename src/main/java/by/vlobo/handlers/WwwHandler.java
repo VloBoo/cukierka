@@ -13,17 +13,27 @@ import java.nio.file.Files;
 
 public class WwwHandler implements HttpHandler {
 
+    private String rootPath;
     private App app;
 
-    public WwwHandler(App app) {
+    public WwwHandler(String rootPath, App app) {
+        this.rootPath = rootPath;
         this.app = app;
     }
 
     @Override
     public void handle(HttpExchange t) throws IOException {
-        File file = new File("www/index.html");
+        String path = t.getRequestURI().getPath();
+        String filePath = rootPath + "/www" + path;
+
+        System.out.println(filePath);
+
+        File file = new File(filePath);
+        if (file.isDirectory()) {
+            file = new File(filePath + "index.html");
+            System.out.println(filePath);
+        }
         if (file.exists() && file.isFile()) {
-            // не всегда будет html, пока заглушка ради кодировки
             t.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
             t.sendResponseHeaders(200, file.length());
             try (OutputStream os = t.getResponseBody()) {

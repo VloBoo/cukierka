@@ -2,10 +2,10 @@ package by.vlobo;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Properties;
 
 import org.json.JSONArray;
@@ -40,24 +40,7 @@ public class Database {
         this(user, password, "localhost", "cukierka");
     }
 
-    public String basechec2k() {
-        try {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery("SELECT datname FROM pg_database;");
-            ArrayList<String> columns = new ArrayList<>();
-            while (rs.next()) {
-                columns.add(rs.getString(1));
-            }
-            rs.close();
-            st.close();
-            return new JSONObject().put("columns", columns.toArray()).toString();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public String basecheck() {
+    public JSONObject basecheck() {
         try {
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery("SELECT \n" + //
@@ -75,18 +58,63 @@ public class Database {
             JSONArray jsonArray = new JSONArray();
 
             while (rs.next()) {
-                int columns = rs.getMetaData().getColumnCount();
-                JSONObject jsonObject = new JSONObject();
-
-                for (int i = 1; i <= columns; i++) {
-                    String columnName = rs.getMetaData().getColumnName(i);
-                    Object value = rs.getObject(i);
-                    jsonObject.put(columnName, value);
-                }
-
-                jsonArray.put(jsonObject);
+                jsonArray.put(Tools.toJSONObject(rs));
             }
-            return jsonArray.toString(4);
+            return new JSONObject().put("answer", jsonArray);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject getUserInfo(String user) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE id = ?");
+            preparedStatement.setString(1, user);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                return Tools.toJSONObject(rs);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject addUser(String id, String name, String email, JSONObject other) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("INSERT INTO Users (id, username, email, other) VALUES (?, ?, ?, ?);");
+            preparedStatement.setString(1, id);
+            preparedStatement.setString(2, name);
+            preparedStatement.setString(3, email);
+            preparedStatement.setString(4, other.toString());
+            String sql = preparedStatement.toString() + ";";
+            preparedStatement.close();
+            // Брух и кринж, я чето не понял, поэтому пока затычка в java > sql > postgesql. Я потом либо разберусь, либо напишу свой компоновщик, а не этот через состояние.
+            if (connection.createStatement().executeUpdate(sql) == 1) {
+                return new JSONObject().put("result", "ok");
+            } else {
+                return new JSONObject().put("result", "error");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject addToken(String id, String user) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Tokens VALUES (?, ?)");
+            preparedStatement.setString(1, id);
+            preparedStatement.setString(2, user);
+            if (preparedStatement.executeUpdate() == 1) {
+                return new JSONObject().put("result", "ok");
+            } else {
+                return new JSONObject().put("result", "error");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
