@@ -1,0 +1,3 @@
+[submodule "doc/belgost"]
+	path = doc/belgost
+	url = git@github.com:VloBoo/belgost.git
