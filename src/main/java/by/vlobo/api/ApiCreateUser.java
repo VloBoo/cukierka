@@ -1,7 +1,6 @@
 package by.vlobo.api;
 
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 import org.json.JSONObject;
 
@@ -17,7 +16,7 @@ public class ApiCreateUser implements IApiProcessor {
         String username = message.getString("username");
         String email = message.getString("email");
         String password = Tools.hashPassword(message.getString("password"));
-        String dateCreation = ZonedDateTime.now().toString();
+        String dateCreation = Tools.formatDateTime(ZonedDateTime.now());
         JSONObject other = new JSONObject();
         other.put("password", password);
         other.put("date of creation", dateCreation);

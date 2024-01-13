@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import org.json.JSONObject;
@@ -42,7 +44,6 @@ public class Tools {
         return nameBasedUUID.toString();
     }
 
-    
     public static JSONObject toJSONObject(ResultSet rs) {
         try {
             int columns = rs.getMetaData().getColumnCount();
@@ -50,7 +51,7 @@ public class Tools {
 
             for (int i = 1; i <= columns; i++) {
                 String columnName = rs.getMetaData().getColumnName(i);
-                Object value = rs.getObject(i);
+                Object value = rs.getObject(i).toString();
                 jsonObject.put(columnName, value);
             }
             return jsonObject;
@@ -58,5 +59,10 @@ public class Tools {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static String formatDateTime(ZonedDateTime zonedDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        return zonedDateTime.format(formatter);
     }
 }

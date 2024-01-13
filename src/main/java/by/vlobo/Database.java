@@ -67,6 +67,39 @@ public class Database {
         }
     }
 
+    public JSONObject getUserByToken(String token) {
+        try {
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("SELECT user_id FROM Tokens WHERE id = ?");
+            preparedStatement.setString(1, token);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                return Tools.toJSONObject(rs);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject getUserInfoByUsername(String username) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE username = ?");
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                return Tools.toJSONObject(rs);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public JSONObject getUserInfo(String user) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE id = ?");
@@ -85,15 +118,8 @@ public class Database {
 
     public JSONObject addUser(String id, String name, String email, JSONObject other) {
         try {
-            PreparedStatement preparedStatement = connection
-                    .prepareStatement("INSERT INTO Users (id, username, email, other) VALUES (?, ?, ?, ?);");
-            preparedStatement.setString(1, id);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, email);
-            preparedStatement.setString(4, other.toString());
-            String sql = preparedStatement.toString() + ";";
-            preparedStatement.close();
-            // Брух и кринж, я чето не понял, поэтому пока затычка в java > sql > postgesql. Я потом либо разберусь, либо напишу свой компоновщик, а не этот через состояние.
+            String source = "INSERT INTO Users (id, username, email, other) VALUES ('%s', '%s', '%s', '%s');";
+            String sql = String.format(source, id, name, email, other.toString());
             if (connection.createStatement().executeUpdate(sql) == 1) {
                 return new JSONObject().put("result", "ok");
             } else {
@@ -105,13 +131,29 @@ public class Database {
         }
     }
 
-    public JSONObject addToken(String id, String user) {
+    public JSONObject checkPassword(String user, String password) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Tokens VALUES (?, ?)");
-            preparedStatement.setString(1, id);
-            preparedStatement.setString(2, user);
-            if (preparedStatement.executeUpdate() == 1) {
+            String source = "SELECT * FROM Users WHERE username = '%s' AND other->>'password' = '%s';";
+            String sql = String.format(source, user, password);
+            System.out.println(sql);
+            if (connection.createStatement().executeQuery(sql).next()) {
                 return new JSONObject().put("result", "ok");
+            } else {
+                return new JSONObject().put("result", "error");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject addToken(String id, String user, String expires, JSONObject other) {
+        try {
+            String source = "INSERT INTO Tokens VALUES ('%s', '%s', '%s', '%s');";
+            String sql = String.format(source, id, user, expires, other.toString());
+            System.out.println(sql);
+            if (connection.createStatement().executeUpdate(sql) == 1) {
+                return new JSONObject().put("result", "ok").put("token", id);
             } else {
                 return new JSONObject().put("result", "error");
             }

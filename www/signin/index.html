@@ -17,12 +17,42 @@
     <input id="password">
     <br/>
     <br/>
-    <button>Подтвердить</button>
+    <button onclick="confirm()">Подтвердить</button>
     <br/>
     <br/>
     <a id="signup" href="/signup/">
         Регистрация
     </a>
+    <script>
+        function confirm() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+            send("RegistToken", "null", { username: username, password: password})
+        }
+
+        function send(api, auth, message) {
+            var requestData = {
+                key: api,
+                message: message,
+                auth: auth
+            };
+
+            var requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            };
+            // Выполняем запрос к серверу
+            fetch('http://localhost:8080/api/', requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                   console.log(data)
+                })
+                .catch(error => console.error('Ошибка при получении данных:', error));
+        }
+    </script>
 </body>
 
 </html>
