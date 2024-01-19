@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,66 @@
 </head>
 
 <body>
+    <include></include>
+    <script>
+        
+        function send(api, auth, message) {
+            var requestData = {
+                message: message,
+                auth: auth
+            };
+
+            var requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${api}`
+                },
+                body: JSON.stringify(requestData)
+            };
+            return fetch('http://localhost:8080/api/', requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    return data
+                })
+                .catch(error => console.error('Ошибка при получении данных:', error));
+        }
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+        function setCookie(name, value, options = {}) {
+
+            options = {
+                path: '/',
+                // при необходимости добавьте другие значения по умолчанию
+                ...options
+            };
+
+            if (options.expires instanceof Date) {
+                options.expires = options.expires.toUTCString();
+            }
+
+            let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+            for (let optionKey in options) {
+                updatedCookie += "; " + optionKey;
+                let optionValue = options[optionKey];
+                if (optionValue !== true) {
+                    updatedCookie += "=" + optionValue;
+                }
+            }
+
+            document.cookie = updatedCookie;
+        }
+        function deleteCookie(name) {
+            setCookie(name, "", {
+                'max-age': -1
+            })
+        }
+    </script>
     <div id="user">
         <div id="username">
             Неизвестно
@@ -17,12 +77,33 @@
         <a id="signup" href="signup/">
             Регистрация
         </a>
-        <a id="logout" href="./">
+        <button id="logout" onclick="exit()">
             Выйти
-        </a>
+        </button>
     </div>
     <script>
+        function exit() {
+            deleteCookie("_t");
+            document.location.reload();
+        }
+    </script>
+    <script>
+        let token = getCookie("_t")
+        if (token === undefined) {
+            document.getElementById("username").innerText = "Пользователь: Гость";
+            document.getElementById("logout").style.display = "none"
 
+        } else {
+            send("GetUserInfoByToken", token, {}).then((data) => {
+                if (data.result == "ok") {
+                    document.getElementById("username").innerText = "Пользователь: " + data.username;
+                    document.getElementById("signin").style.display = "none"
+                    document.getElementById("signup").style.display = "none"
+                } else {
+                    document.getElementById("username").innerText = "Ошибка";
+                }
+            });
+        }
     </script>
 </body>
 

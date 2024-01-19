@@ -8,8 +8,8 @@ import by.vlobo.App;
 public class ApiGetUserInfoById implements IApiProcessor {
 
     @Override
-    public JSONObject process(JSONObject message, App instance) {
+    public JSONObject process(JSONObject message, App instance, String user) {
 
-        return new JSONObject("{}");
+        return IApiProcessor.CODE_501_NOT_IMPLEMENTED;
     }
 }

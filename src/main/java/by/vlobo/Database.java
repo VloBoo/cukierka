@@ -69,10 +69,9 @@ public class Database {
 
     public JSONObject getUserByToken(String token) {
         try {
-            PreparedStatement preparedStatement = connection
-                    .prepareStatement("SELECT user_id FROM Tokens WHERE id = ?");
-            preparedStatement.setString(1, token);
-            ResultSet rs = preparedStatement.executeQuery();
+            String source = "SELECT user_id FROM Tokens WHERE id = '%s';";
+            String sql = String.format(source, token);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
             if (rs.next()) {
                 return Tools.toJSONObject(rs);
             } else {
@@ -102,9 +101,9 @@ public class Database {
 
     public JSONObject getUserInfo(String user) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Users WHERE id = ?");
-            preparedStatement.setString(1, user);
-            ResultSet rs = preparedStatement.executeQuery();
+            String source = "SELECT * FROM Users WHERE id = '%s';";
+            String sql = String.format(source, user);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
             if (rs.next()) {
                 return Tools.toJSONObject(rs);
             } else {
@@ -121,9 +120,43 @@ public class Database {
             String source = "INSERT INTO Users (id, username, email, other) VALUES ('%s', '%s', '%s', '%s');";
             String sql = String.format(source, id, name, email, other.toString());
             if (connection.createStatement().executeUpdate(sql) == 1) {
-                return new JSONObject().put("result", "ok");
+                return new JSONObject();
             } else {
-                return new JSONObject().put("result", "error");
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject addProject(String id, String name, JSONObject other) {
+        try {
+            String source = "INSERT INTO Projects (id, username, applications, other) VALUES ('%s', '%s', ARRAY[], '%s');";
+            String sql = String.format(source, id, name, other.toString());
+            if (connection.createStatement().executeUpdate(sql) == 1) {
+                return new JSONObject().put("id", id);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject addUsersToProjects(String user, String project ){
+        return addUsersToProjects(user, project, "default");
+    }
+    
+    public JSONObject addUsersToProjects(String user, String project, String role) {
+        try {
+            String source = "INSERT INTO Projects (user_id, project_id, user_role) VALUES ('%s', '%s', '%s');";
+            String sql = String.format(source, user, project, role);
+            if (connection.createStatement().executeUpdate(sql) == 1) {
+                return new JSONObject();
+            } else {
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -137,9 +170,9 @@ public class Database {
             String sql = String.format(source, user, password);
             System.out.println(sql);
             if (connection.createStatement().executeQuery(sql).next()) {
-                return new JSONObject().put("result", "ok");
+                return new JSONObject();
             } else {
-                return new JSONObject().put("result", "error");
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -153,9 +186,9 @@ public class Database {
             String sql = String.format(source, id, user, expires, other.toString());
             System.out.println(sql);
             if (connection.createStatement().executeUpdate(sql) == 1) {
-                return new JSONObject().put("result", "ok").put("token", id);
+                return new JSONObject().put("token", id);
             } else {
-                return new JSONObject().put("result", "error");
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();

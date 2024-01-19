@@ -3,33 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Вход</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 
 <body>
-    <h1>Вход</h1>
-    Логин
+    <h1>Создание проекта</h1>
+    Название
     <br />
-    <input id="username">
-    <br />
-    Пароль
-    <br />
-    <input id="password">
+    <input id="name">
     <br />
     <br />
-    <button onclick="confirm()">Подтвердить</button>
+    <button onclick="confirm()">Создать</button>
     <br />
-    <br />
-    <a id="signup" href="/signup/">
-        Регистрация
-    </a>
     <script>
-        function confirm() {
-            let username = document.getElementById("username").value;
-            let password = document.getElementById("password").value;
-            send("RegistToken", "null", { username: username, password: password })
-        }
-
         function send(api, auth, message) {
             var requestData = {
                 key: api,
@@ -44,21 +31,19 @@
                 },
                 body: JSON.stringify(requestData)
             };
-            // Выполняем запрос к серверу
-            fetch('http://localhost:8080/api/', requestOptions)
+            return fetch('http://localhost:8080/api/', requestOptions)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.result == "ok") {
-                        setCookie("_t", data.token);
-                        alert("Вы успешно зашли в аккаунт");
-                        document.location = '/';
-                    } else {
-                        alert("Не удалось зайти в аккаунт");
-                    }
+                    return data
                 })
                 .catch(error => console.error('Ошибка при получении данных:', error));
         }
-
+        function getCookie(name) {
+            let matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
         function setCookie(name, value, options = {}) {
 
             options = {
@@ -82,6 +67,11 @@
             }
 
             document.cookie = updatedCookie;
+        }
+        function deleteCookie(name) {
+            setCookie(name, "", {
+                'max-age': -1
+            })
         }
     </script>
 </body>

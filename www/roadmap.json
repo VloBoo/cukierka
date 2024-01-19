@@ -1,0 +1,40 @@
+{
+    "i": "",
+    "type": 1,
+    "index": "main.xml",
+    "next": [
+        {
+            "i": "project",
+            "type": 1,
+            "index": "projectc.xml",
+            "next": [
+                {
+                    "i": "projectid",
+                    "index": "project.xml",
+                    "type": 3,
+                    "next": []
+                }
+            ]
+        },
+        {
+            "i": "api",
+            "type": 0,
+            "next": [
+                {
+                    "i": "apikey",
+                    "type": 2
+                }
+            ]
+        },
+        {
+            "i": "cdn",
+            "type": 0,
+            "next": [
+                {
+                    "i": "file",
+                    "type": 4
+                }
+            ]
+        }
+    ]
+}

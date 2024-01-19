@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
@@ -32,7 +32,14 @@
             let username = document.getElementById("username").value;
             let email = document.getElementById("email").value;
             let password = document.getElementById("password").value;
-            send("CreateUser", "null", { username: username, email: email, password: password })
+            send("CreateUser", "null", { username: username, email: email, password: password }).then((data) => {
+                if (data.result == "ok") {
+                    alert("Вы успешно зарегистрировали аккаунт");
+                    document.location = '/signin/';
+                } else {
+                    alert("Не удалось зарегистрироваnm аккаунт");
+                }
+            });
         }
 
         function send(api, auth, message) {
@@ -49,11 +56,10 @@
                 },
                 body: JSON.stringify(requestData)
             };
-            // Выполняем запрос к серверу
-            fetch('http://localhost:8080/api/', requestOptions)
+            return fetch('http://localhost:8080/api/', requestOptions)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
+                    return data
                 })
                 .catch(error => console.error('Ошибка при получении данных:', error));
         }
