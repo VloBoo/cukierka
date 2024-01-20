@@ -32,7 +32,8 @@ public class Database {
             props.setProperty("password", password);
             connection = DriverManager.getConnection(url, props);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Не удалось подключиться к БД");
+            //e.printStackTrace();
         }
     }
 

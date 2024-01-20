@@ -19,6 +19,5 @@ public class ApiGetUserInfo implements IApiProcessor {
             return IApiProcessor.CODE_500_INTERNAL_SERVER_ERROR;
         }
         return Tools.addJsonObject(IApiProcessor.CODE_200_OK, jsonObject);
-
     }
 }

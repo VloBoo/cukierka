@@ -1,6 +1,13 @@
 package by.vlobo;
 
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
@@ -8,12 +15,18 @@ import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class Tools {
     public static String hashPassword(String plainPassword) {
@@ -129,7 +142,7 @@ public class Tools {
             System.out.println(key);
 
             if (IApiProcessor.class.isAssignableFrom(clazz)) {
-                IApiProcessor processor = (IApiProcessor) clazz.getDeclaredConstructor().newInstance();
+                IApiProcessor processor = (IApiProcessor) clazz.getDeclaredConstructor().newInstance();;
                 return processor.process(message, instance, user);
             }
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
@@ -154,5 +167,102 @@ public class Tools {
             jo.put(key, jo2.get(key));
         }
         return jo;
+    }
+
+    public static void sendString(HttpExchange t, int code, String str) throws IOException {
+        byte[] bstr = str.getBytes("UTF-8");
+        t.sendResponseHeaders(code, bstr.length);
+        try (OutputStream os = t.getResponseBody()) {
+            os.write(bstr);
+        }
+    }
+
+    public static void sendFile(HttpExchange t, int code, File file) throws IOException {
+        t.sendResponseHeaders(code, file.length());
+        try (OutputStream os = t.getResponseBody()) {
+            Files.copy(file.toPath(), os);
+        }
+    }
+
+    public static String linkHtml(String firstHtml, HashMap<String, String> vars) throws IOException {
+
+        HashSet<String> cssFiles = new HashSet<String>();
+        HashSet<String> jsFiles = new HashSet<String>();
+        HashMap<String, Float> jsMain = new HashMap<String, Float>();
+        Document doc = processInclude(firstHtml, cssFiles, jsFiles, jsMain);
+
+        StringBuilder cssCommon = new StringBuilder();
+        StringBuilder jsCommon = new StringBuilder();
+
+        for (String fileName : cssFiles) {
+            try {
+                String cssContent = Files.readString(Path.of("www/" + fileName));
+                cssCommon.append(cssContent).append("\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        jsCommon.append(String.format("let global = %s;\n", new JSONObject(vars).toString()));
+
+        for (String fileName : jsFiles) {
+            try {
+                String jsContent = Files.readString(Path.of("www/" + fileName));
+                jsCommon.append(jsContent).append("\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // document.addEventListener("DOMContentLoaded", function () {});
+        for (String fun : jsMain.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList())) {
+            jsCommon.append(fun).append("\n");
+        }
+
+        doc.head().append("<style>\n" + cssCommon.toString() + "\n</style>");
+        doc.body().append("<script>\n" + jsCommon.toString() + "\n</script>");
+        //System.out.println(doc.toString());
+        return doc.toString();
+    }
+
+    private static Document processInclude(
+            String filePath,
+            HashSet<String> cssFiles,
+            HashSet<String> jsFiles,
+            HashMap<String, Float> jsMain)
+            throws IOException {
+        File inputFile = new File("www/" + filePath);
+        Document doc = Jsoup.parse(inputFile, "UTF-8", "");
+
+        Elements requiredEls = doc.select("required");
+        for (Element includeEl : requiredEls.select("[css]")) {
+            String srcValue = includeEl.attr("src");
+            cssFiles.add(srcValue);
+            includeEl.remove();
+        }
+        for (Element includeEl : requiredEls.select("[js]")) {
+            String srcValue = includeEl.attr("src");
+            jsFiles.add(srcValue);
+            includeEl.remove();
+        }
+        for (Element includeEl : requiredEls.select("[jsmain]")) {
+            String srcValue = includeEl.attr("src");
+            Float priorValue = Float.parseFloat(includeEl.attr("jsmain"));
+            jsMain.put(srcValue, priorValue);
+            includeEl.remove();
+        }
+
+        Elements includeEls = doc.select("include[src]");
+        for (Element includeEl : includeEls) {
+            String srcValue = includeEl.attr("src");
+            String includedContent = processInclude(srcValue, cssFiles, jsFiles, jsMain).body().html();
+            includeEl.after(includedContent);
+            includeEl.remove();
+        }
+
+        return doc;
     }
 }
