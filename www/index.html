@@ -7,8 +7,20 @@
 </head>
 
 <body>
-    <include src="userbar.html"/>
-    <hr/>
+    <required src="css/container.css" css />
+    <required src="css/form.css" css />
+    <include src="bar.html" />
+    <hr />
+    <div class="container">
+        <div class="row">
+            <h1 style="flex-grow: 1;">
+                Список ваших проектов
+            </h1>
+            <button class="blue" id="signup" onclick="document.location='/'" disabled>
+                Создать проект
+            </button>
+        </div>
+    </div>
 </body>
 
 </html>

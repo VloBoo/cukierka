@@ -1,17 +1,20 @@
-<required src="userbar()" jsmain="0.1"/>
-<required src="js/common.js" js/>
-<required src="js/userbar.js" js/>
-<div id="user">
-    <div id="username">
-        Неизвестно
-    </div>
-    <a id="signin" href="/account/signin/">
+<required src="userbar()" jsmain="0.1" />
+<required src="js/common.js" js />
+<required src="js/userbar.js" js />
+<required src="css/form.css" css />
+<required src="css/container.css" css />
+<div id="user" class="row">
+    <button class="blue" id="signin" onclick="document.location='/account/signin/'">
         Войти
-    </a>
-    <a id="signup" href="/account/signup/">
+    </button>
+    <button class="blue" id="signup" onclick="document.location='/account/signup/'">
         Регистрация
-    </a>
+    </button>
     <button id="logout" onclick="exit()">
         Выйти
     </button>
+    <div class="space"></div>
+    <div id="username">
+        Неизвестно
+    </div>
 </div>

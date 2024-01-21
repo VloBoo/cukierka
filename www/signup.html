@@ -4,29 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Регистрация</title>
+    <required src="css/form.css" css />
+    <required src="css/container.css" css />
 </head>
 
 <body>
-    <h1>Регистрация</h1>
-    Логин
-    <br />
-    <input id="username">
-    <br />
-    Почта
-    <br />
-    <input id="email">
-    <br />
-    Пароль
-    <br />
-    <input id="password">
-    <br />
-    <br />
-    <button onclick="confirm()">Подтвердить</button>
-    <br />
-    <br />
-    <a id="signin" href="/account/signin/">
-        Войти
-    </a>
+    <div class="container">
+        <h1>Регистрация</h1>
+        <div class="row">
+            <label class="p25" for="username">Логин</label>
+            <input class="p75" id="username">
+        </div>
+        <div class="row">
+            <label class="p25" for="email">Почта</label>
+            <input class="p75" id="email">
+        </div>
+        <div class="row">
+            <label class="p25" for="password">Пароль</label>
+            <input class="p75" id="password">
+        </div>
+        <div class="row">
+            <button class="green" onclick="confirm()">Подтвердить</button>
+        </div>
+        <div class="space"></div>
+        <div class="row">
+            <a id="signin" href="/account/signin/">
+                Уже есть аккаунт?
+            </a>
+            <a id="signup" href="/">
+                На главную
+            </a>
+        </div>
+    </div>
     <required src="js/common.js" js />
     <required src="js/signup.js" js />
 </body>
