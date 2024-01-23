@@ -33,7 +33,7 @@ public class Database {
             connection = DriverManager.getConnection(url, props);
         } catch (SQLException e) {
             System.out.println("Не удалось подключиться к БД");
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 
@@ -133,7 +133,7 @@ public class Database {
 
     public JSONObject addProject(String id, String name, JSONObject other) {
         try {
-            String source = "INSERT INTO Projects (id, username, applications, other) VALUES ('%s', '%s', ARRAY[], '%s');";
+            String source = "INSERT INTO Projects (id, name, applications, other) VALUES ('%s', '%s', ARRAY[]::VARCHAR[], '%s');";
             String sql = String.format(source, id, name, other.toString());
             if (connection.createStatement().executeUpdate(sql) == 1) {
                 return new JSONObject().put("id", id);
@@ -146,16 +146,83 @@ public class Database {
         }
     }
 
-    public JSONObject addUsersToProjects(String user, String project ){
+    public JSONObject addUsersToProjects(String user, String project) {
         return addUsersToProjects(user, project, "default");
     }
-    
+
     public JSONObject addUsersToProjects(String user, String project, String role) {
         try {
-            String source = "INSERT INTO Projects (user_id, project_id, user_role) VALUES ('%s', '%s', '%s');";
+            String source = "INSERT INTO UsersToProjects (user_id, project_id, user_role) VALUES ('%s', '%s', '%s');";
             String sql = String.format(source, user, project, role);
             if (connection.createStatement().executeUpdate(sql) == 1) {
                 return new JSONObject();
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject getProjects(String user) {
+        try {
+            String source = "SELECT project_id FROM UsersToProjects WHERE user_id = '%s';";
+            String sql = String.format(source, user);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+
+            JSONArray jsonArray = new JSONArray();
+            while (rs.next()) {
+                jsonArray.put(Tools.toJSONObject(rs));
+            }
+            return new JSONObject().put("arr", jsonArray);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject getMembers(String user) {
+        try {
+            String source = "SELECT user_id FROM UsersToProjects WHERE project_id = '%s';";
+            String sql = String.format(source, user);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+
+            JSONArray jsonArray = new JSONArray();
+            while (rs.next()) {
+                jsonArray.put(Tools.toJSONObject(rs));
+            }
+            return new JSONObject().put("arr", jsonArray);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject getProjectInfo(String project) {
+        try {
+            String source = "SELECT * FROM Projects WHERE id = '%s';";
+            String sql = String.format(source, project);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+            if (rs.next()) {
+                return Tools.toJSONObject(rs);
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject getPermission(String user, String project) {
+        try {
+            String source = "SELECT * FROM UsersToProjects WHERE user_id = '%s' AND project_id = '%s';";
+            String sql = String.format(source, user, project);
+            System.out.println(sql);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+            if (rs.next()) {
+                return Tools.toJSONObject(rs);
             } else {
                 return null;
             }

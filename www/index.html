@@ -16,9 +16,13 @@
             <h1 style="flex-grow: 1;">
                 Список ваших проектов
             </h1>
-            <button class="blue" id="signup" onclick="document.location='/'" disabled>
+            <button class="blue" id="createproject" onclick="document.location='/project/create'">
                 Создать проект
             </button>
+        </div>
+        <div id="listproject">
+            <required src="filllist()" jsmain="0.2" />
+            <required src="js/project/list.js" js />
         </div>
     </div>
 </body>

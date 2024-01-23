@@ -5,14 +5,30 @@
     "next": [
         {
             "i": "project",
-            "type": 1,
-            "index": "projectc.html",
+            "type": 0,
+            "next": [
+                {
+                    "i": "create",
+                    "index": "project/create.html",
+                    "type": 1
+                }
+            ]
+        },
+        {
+            "i": "p",
+            "type": 0,
             "next": [
                 {
                     "i": "projectid",
-                    "index": "project.html",
+                    "index": "project/index.html",
                     "type": 3,
-                    "next": []
+                    "next": [
+                        {
+                            "i": "members",
+                            "index": "project/members.html",
+                            "type": 1
+                        }
+                    ]
                 }
             ]
         },

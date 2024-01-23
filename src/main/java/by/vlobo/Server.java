@@ -106,6 +106,7 @@ class ServerHandler implements HttpHandler {
                 JSONObject message = new JSONObject(new String(t.getRequestBody().readAllBytes()));
                 response = Tools.processMessage(vars.get("1"), message, instance, user);
             } catch (JSONException e) {
+                e.printStackTrace();
                 response = IApiProcessor.CODE_400_BAD_REQUEST;
             }
             System.out.println(response);
@@ -143,7 +144,7 @@ class ServerHandler implements HttpHandler {
             Tools.sendFile(t, 200, file);
         } else {
             String notFoundResponse = "File not found";
-            Tools.sendString(t, 400, notFoundResponse);
+            Tools.sendString(t, 404, notFoundResponse);
         }
     }
 }

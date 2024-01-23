@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+</head>
+
+<body>
+    <required src="css/container.css" css />
+    <required src="css/form.css" css />
+    <include src="bar.html" />
+    <hr />
+    <div class="container">
+        <h1 >
+            Создание нового проекта
+        </h1>
+        <div class="row">
+            <label class="p25" for="name">Название проекта</label>
+            <input class="p75" id="name">
+        </div>
+        <div class="row">
+            <button id="confirmbutton" class="green" onclick="confirm()">Подтвердить</button>
+            <div class="space"></div>
+            <div id="errm" style="color: #eb020b;"></div>
+        </div>
+        <div class="space"></div>
+        <required src="js/common.js" js />
+        <required src="js/project/create.js" js />
+    </div>
+</body>
+
+</html>

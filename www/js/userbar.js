@@ -19,5 +19,5 @@ function userbar() {
 
 function exit() {
     deleteCookie("_t");
-    document.location.reload();
+    document.location = "/";
 }

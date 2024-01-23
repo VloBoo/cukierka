@@ -27,6 +27,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.postgresql.util.PGobject;
 
 public class Tools {
     public static String hashPassword(String plainPassword) {
@@ -69,8 +70,13 @@ public class Tools {
 
             for (int i = 1; i <= columns; i++) {
                 String columnName = rs.getMetaData().getColumnName(i);
-                Object value = rs.getObject(i).toString();
-                jsonObject.put(columnName, value);
+                Object value = rs.getObject(i);
+                if (value instanceof org.postgresql.util.PGobject) {
+                    PGobject pgObject = (PGobject) value;
+                    jsonObject.put(columnName, new JSONObject(pgObject.getValue()));
+                } else {
+                    jsonObject.put(columnName, value.toString());
+                }
             }
             return jsonObject;
         } catch (SQLException e) {
@@ -142,7 +148,8 @@ public class Tools {
             System.out.println(key);
 
             if (IApiProcessor.class.isAssignableFrom(clazz)) {
-                IApiProcessor processor = (IApiProcessor) clazz.getDeclaredConstructor().newInstance();;
+                IApiProcessor processor = (IApiProcessor) clazz.getDeclaredConstructor().newInstance();
+                ;
                 return processor.process(message, instance, user);
             }
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
@@ -224,7 +231,7 @@ public class Tools {
 
         doc.head().append("<style>\n" + cssCommon.toString() + "\n</style>");
         doc.body().append("<script>\n" + jsCommon.toString() + "\n</script>");
-        //System.out.println(doc.toString());
+        // System.out.println(doc.toString());
         return doc.toString();
     }
 

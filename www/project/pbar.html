@@ -1,0 +1,27 @@
+<required src="css/container.css" css />
+<required src="css/form.css" css />
+<div class="container row">
+    <a class="text" href="/">
+        Cukierka
+    </a>
+    <div class="space"></div>
+    <div class="space"></div>
+    <div class="space"></div>
+    <div style="flex-grow: 1;">
+        <div class="row">
+            <div class="space"></div>
+            <div id="projectname"></div>
+            <div class="space"></div>
+            <div class="space"></div>
+            <div class="space"></div>
+            <button class="blue" id="membersbutton" onclick="document.location='./members/'" disabled>Участники</button>
+            <button class="blue" id="bugsbutton" onclick="document.location='./bugs/'">Баг-трекер</button>
+            <button class="blue" id="settingsbutton" onclick="document.location='./setting/'" disabled>Настройки</button>
+        </div>
+    </div>
+    <div class="space"></div>
+    <include src="userbar.html" />
+    <required src="js/project/index.js" js />
+    <required src="projectindex()" jsmain="0.2" />
+</div>
+</div>
