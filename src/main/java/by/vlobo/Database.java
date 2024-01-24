@@ -146,6 +146,30 @@ public class Database {
         }
     }
 
+    public JSONObject addBug(
+            String id,
+            String bugName,
+            String bugDescription,
+            String userId,
+            String projectId,
+            String criticality,
+            String priority,
+            String status,
+            JSONObject other) {
+        try {
+            String source = "INSERT INTO Bugs (id, name, description, user_id, project_id, criticality, priority, status, other) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+            String sql = String.format(source, id, bugName, bugDescription, userId, projectId, criticality, priority, status, other.toString());
+            if (connection.createStatement().executeUpdate(sql) == 1) {
+                return new JSONObject();
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public JSONObject addUsersToProjects(String user, String project) {
         return addUsersToProjects(user, project, "default");
     }
@@ -176,6 +200,41 @@ public class Database {
                 jsonArray.put(Tools.toJSONObject(rs));
             }
             return new JSONObject().put("arr", jsonArray);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject getBugs(String project) {
+        try {
+            String source = "SELECT * FROM Bugs WHERE project_id = '%s';";
+            String sql = String.format(source, project);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+
+            JSONArray jsonArray = new JSONArray();
+            while (rs.next()) {
+                jsonArray.put(Tools.toJSONObject(rs));
+            }
+            return new JSONObject().put("arr", jsonArray);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject getBugInfo(String id) {
+        try {
+            String source = "SELECT * FROM Bugs WHERE id = '%s';";
+            String sql = String.format(source, id);
+            System.out.println(sql);
+            ResultSet rs = connection.createStatement().executeQuery(sql);
+
+            if (rs.next()) {
+                return Tools.toJSONObject(rs);
+            } else {
+                return null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

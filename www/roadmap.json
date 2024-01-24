@@ -24,9 +24,19 @@
                     "type": 3,
                     "next": [
                         {
-                            "i": "members",
-                            "index": "project/members.html",
+                            "i": "addbug",
+                            "index": "project/addbug.html",
                             "type": 1
+                        },
+                        {
+                            "i": "bugs",
+                            "index": "project/bugs.html",
+                            "type": 1
+                        },
+                        {
+                            "i": "bugid",
+                            "index": "project/bug.html",
+                            "type": 3
                         }
                     ]
                 }

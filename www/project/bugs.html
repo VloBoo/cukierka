@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Баги</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            margin: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <required src="css/container.css" css />
+    <required src="css/form.css" css />
+    <include src="project/pbar.html" />
+    <hr />
+    <div class="container">
+        <div class="row">
+            <h1 style="flex-grow: 1;">
+                Список багов
+            </h1>
+            <button class="blue" id="addbugs" onclick="document.location='../addbug/'">
+                Создать баг
+            </button>
+        </div>
+    </div>
+
+    <div id="table-container">
+        <table id="data-table">
+            <thead style="background-color: #202021;" ;>
+                <tr>
+                    <th class="p20">Название</th>
+                    <th class="p50">Описание</th>
+                    <th class="p10">Критичность</th>
+                    <th class="p10">Приоритет</th>
+                    <th class="p10">Важность</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="listbugs">
+        <required src="bugslist()" jsmain="0.2" />
+        <required src="js/project/bugs.js" js />
+    </div>
+
+</body>
+
+</html>

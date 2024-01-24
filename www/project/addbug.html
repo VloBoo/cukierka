@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Создание бага</title>
+</head>
+
+<body>
+    <required src="css/container.css" css />
+    <required src="css/form.css" css />
+    <include src="project/pbar.html" />
+    <hr />
+    <div class="container">
+        <h1>Создание бага</h1>
+        <div class="row">
+            <label class="p25" for="name">Название</label>
+            <input class="p75" id="name">
+        </div>
+        <div class="row">
+            <label class="p25" for="criticality">Критичность</label>
+            <select class="p25" id="criticality">
+                <option value="1">S1. Блокирующий (Blocker)</option>
+                <option value="2">S2. Критический (Critical). </option>
+                <option value="3">S3. Значительный (Major).</option>
+                <option value="4">S4. Незначительный (Minor).</option>
+                <option value="5" selected>S5. Тривиальный (Trivial).</option>
+            </select>
+        </div>
+        <div class="row">
+            <label class="p25" for="priority">Приоритет</label>
+            <select class="p25" id="priority">
+                <option value="1">P1. Высокий приоритет (High)</option>
+                <option value="2">P2. Средний приоритет (Medium)</option>
+                <option value="3" selected>P3. Низкий приоритет (Low)</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <label class="p25" for="status">Статус</label>
+            <input class="p75" id="status" readonly value="Открыт">
+        </div>
+
+        <div class="row">
+            <label class="p25" for="description">Описание бага</label>
+            <textarea class="p75" id="description"></textarea>
+        </div>
+        <div class="row">
+            <button class="green" onclick="confirm()">Создать</button>
+        </div>
+        <required src="js/common.js" js />
+        <required src="js/project/addbug.js" js />
+    </div>
+</body>
+
+</html>

@@ -24,3 +24,15 @@ CREATE TABLE UsersToProjects(
     project_id UUID REFERENCES Projects(id),
     user_role VARCHAR NOT NULL
 );
+
+CREATE TABLE Bugs(
+    id UUID PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    description VARCHAR NOT NULL,
+    user_id UUID REFERENCES Users(id),
+    project_id UUID REFERENCES Projects(id),
+    criticality INT NOT NULL,
+    priority INT NOT NULL,
+    status VARCHAR NOT NULL,
+    other JSONB
+);

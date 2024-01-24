@@ -1,5 +1,4 @@
 function memberslist() {
-
     let token = getCookie("_t");
     let pid = global['1'];
 

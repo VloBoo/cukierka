@@ -1,4 +1,7 @@
 function addmember() {
+    console.warn("Использован нереализованный метод")
+    return;
+    //Нереализован
     let token = getCookie("_t");
     let pid = global['1'];
 
