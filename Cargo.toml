@@ -1,0 +1,12 @@
+[package]
+name = "cukierka"
+version = "0.4.0"
+edition = "2021"
+
+[dependencies]
+ctrlc = "3.4.2"
+serde_json = "1.0.113"
+tokio = { version = "1", features = ["full"] }
+tokio-postgres = {version = "0.7", features = ["with-uuid-1"] }
+uuid = "1.7.0"
+warp = "0.3"
