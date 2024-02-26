@@ -1,0 +1,12 @@
+appenders:
+  console:
+    kind: console
+
+  panic:
+    kind: console
+
+root:
+  level: debug
+  appenders:
+    - console
+    - panic
