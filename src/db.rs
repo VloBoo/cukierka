@@ -8,7 +8,7 @@ pub async fn get_tables() -> Result<String, tokio_postgres::Error> {
 
     tokio::spawn(async move {
         if let Err(e) = connection.await {
-            eprintln!("connection error: {}", e);
+            log::error!("connection error: {}", e);
         }
     });
 
@@ -35,7 +35,7 @@ pub async fn get_user(id: &Uuid) -> Result<Value, tokio_postgres::Error> {
 
     tokio::spawn(async move {
         if let Err(e) = connection.await {
-            eprintln!("connection error: {}", e);
+            log::error!("connection error: {}", e);
         }
     });
 
@@ -46,11 +46,9 @@ pub async fn get_user(id: &Uuid) -> Result<Value, tokio_postgres::Error> {
     let mut rows_json = Vec::new();
 
     for row in &rows {
-        // Создаем объект JSON для текущей строки
         let mut row_json = serde_json::Map::new();
 
         for i in 0..row.len() {
-            // Получаем значение из столбца и добавляем его в объект JSON
             let column_name = row.columns()[i].name();
             let value: Value = match row.try_get::<_, String>(i) {
                 Ok(value) => json!(value),
@@ -59,11 +57,8 @@ pub async fn get_user(id: &Uuid) -> Result<Value, tokio_postgres::Error> {
             row_json.insert(column_name.into(), value);
         }
 
-        // Добавляем объект JSON строки в массив
         rows_json.push(Value::Object(row_json));
     }
-
-    // Создаем JSON-объект, содержащий массив объектов строк
     let result = json!({
         "rows": rows_json
     });
