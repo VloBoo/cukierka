@@ -1,13 +1,13 @@
 use uuid::Uuid;
 use warp::Filter;
 
-mod core;
+mod api;
 mod db;
 
 #[tokio::main]
 async fn main() {
     pretty_env_logger::formatted_timed_builder()
-        .filter_level(log::LevelFilter::Info)
+        .filter_level(log::LevelFilter::Trace)
         .init();
 
     log::trace!("Trace test");
@@ -19,26 +19,10 @@ async fn main() {
     let get_tables_route =
         warp::path("e")
             .and(warp::path::param())
-            .and_then(|param: String| async move {
-                log::info!("pls");
-                match Uuid::parse_str(&param) {
-                    Ok(r) => match db::get_user(&r).await {
-                        Ok(result) => {
-                            log::info!("{}", result);
-                            return Ok::<_, warp::Rejection>(warp::reply::json(&result));
-                        }
-                        Err(err) => {
-                            log::error!("Error: {:?}", err);
-                            return Ok::<_, warp::Rejection>(warp::reply::json(
-                                &"Error".to_string(),
-                            ));
-                        }
-                    },
-                    Err(_) => {
-                        log::error!("no");
-                        return Ok::<_, warp::Rejection>(warp::reply::json(&"Error".to_string()));
-                    }
-                }
+            .and_then(|param: Uuid| async move {
+                Ok::<_, warp::Rejection>(warp::reply::json(
+                    &api::base::get_user_by_id(&param).await,
+                ))
             });
 
     /*
@@ -48,7 +32,5 @@ async fn main() {
         .map(|param: String, agent: String| format!("Hello {}, whose agent is {}", param, agent));
     */
 
-    warp::serve(get_tables_route)
-        .run(([0, 0, 0, 0], 80))
-        .await;
+    warp::serve(get_tables_route).run(([0, 0, 0, 0], 80)).await;
 }
