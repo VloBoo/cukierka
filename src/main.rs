@@ -4,6 +4,7 @@ use tokio_postgres::NoTls;
 use uuid::Uuid;
 use warp::http::StatusCode;
 use warp::Filter;
+
 #[tokio::main]
 async fn main() {
     pretty_env_logger::formatted_timed_builder()
@@ -34,11 +35,18 @@ async fn main() {
 
             log::info!("{}", sql);
 
-            let rows = client
-                .query(sql, &[])
-                .await
-                .inspect_err(|e| log::error!("Не удалось отправить запрос \n {:?}", e))
-                .expect("Не удалось отправить запрос");
+            let rows = match client.query(sql, &[]).await {
+                Ok(value) => {
+                    log::debug!("{:?}", value);
+                    value
+                }
+                Err(error) => {
+                    log::error!("Не удалось отправить запрос \n {:?}", error);
+                    return Ok::<_, warp::Rejection>(warp::reply::json(
+                        &json!({"error":"Not execute."}),
+                    ));
+                }
+            };
 
             let mut rows_json = Vec::new();
 
@@ -66,7 +74,7 @@ async fn main() {
             let result = json!({
                 "rows": rows_json
             });
-
+            log::debug!("{:?}", result);
             Ok::<_, warp::Rejection>(warp::reply::json(&result))
         },
     );

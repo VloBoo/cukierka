@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Авторизация</title>
+    <title>Регистрация</title>
     <!--
 
     Template 2108 Dashboard
@@ -30,18 +30,40 @@
                     <div class="row">
                         <div class="col-12 text-center">
                             <i class="fas fa-3x fa-circle-notch tm-site-icon text-center"></i>
-                            <h2 class="tm-block-title mt-3">Авторизация</h2>
+                            <h2 class="tm-block-title mt-3">Регистрация</h2>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-12">
-                            <form id="login" class="tm-login-form">
+                            <form id="registration" class="tm-login-form">
                                 <div class="input-group">
                                     <label for="email"
                                         class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">Почта</label>
-                                    <input name="email" type="text"
+                                    <input name="email" type="email"
                                         class="form-control validate col-xl-9 col-lg-8 col-md-8 col-sm-7" id="email"
                                         required>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <label for="firstname"
+                                        class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">Имя</label>
+                                    <input name="firstname" type="text" class="form-control validate " id="firstname"
+                                        required>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <label for="secondname"
+                                        class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">Фамилия</label>
+                                    <input name="secondname" type="text" class="form-control validate" id="secondname"
+                                        required>
+                                </div>
+                                <div class="input-group mt-3">
+                                    <label for="usertype" class="col-xl-4 col-lg-4 col-md-4 col-sm-5 col-form-label">Вид
+                                        пользователя
+                                    </label>
+                                    <select name="usertype" type="radio" class="form-control validate pb-sm-0 pt-sm-0"
+                                        id="usertype" required>
+                                        <option value="l">Юридическое лицо</option>
+                                        <option value="n" selected>Физическое лицо</option>
+                                    </select>
                                 </div>
                                 <div class="input-group mt-3">
                                     <label for="password"
@@ -53,7 +75,7 @@
                                     <button type="submit" class="btn btn-primary d-inline-block mx-auto">Войти</button>
                                 </div>
                                 <div class="input-group mt-3">
-                                    <a class="page-link mx-auto" href="registration.html">Регистрация</a>
+                                    <a class="page-link mx-auto" href="login.html">Авторизация</a>
                                 </div>
                             </form>
                         </div>
@@ -72,9 +94,9 @@
     <script src="js/vlobo.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("login").addEventListener("submit", function (event) {
-                event.preventDefault(); 
-                login();
+            document.getElementById("registration").addEventListener("submit", function (event) {
+                event.preventDefault();
+                registration();
             });
         });
     </script>
