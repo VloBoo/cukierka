@@ -1,0 +1,41 @@
+CREATE TABLE Resumes(
+    id UUID PRIMARY KEY,
+    title VARCHAR NOT NULL,
+    body VARCHAR NOT NULL,
+    payment INTEGER NOT NULL,
+    skill VARCHAR[] NOT NULL,
+    created TIMESTAMPTZ NOT NULL
+);
+
+CREATE TABLE Users(
+    id UUID PRIMARY KEY,
+    resume_id UUID,
+    email VARCHAR NOT NULL,
+    firstname VARCHAR NOT NULL,
+    secondname VARCHAR NOT NULL,
+    password VARCHAR NOT NULL,
+    created TIMESTAMPTZ NOT NULL,
+    type CHAR NOT NULL,
+    FOREIGN KEY (resume_id) REFERENCES Resumes (id) ON DELETE CASCADE
+);
+
+CREATE TABLE Vacancies(
+    id UUID PRIMARY KEY,
+    user_id UUID,
+    title VARCHAR NOT NULL,
+    body VARCHAR NOT NULL,
+    payment INTEGER NOT NULL,
+    skill VARCHAR[] NOT NULL,
+    created TIMESTAMPTZ NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
+);
+
+CREATE TABLE Responses(
+    id UUID PRIMARY KEY,
+    user_id UUID,
+    vacancy_id UUID,
+    body VARCHAR NOT NULL,
+    created TIMESTAMPTZ NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE,
+    FOREIGN KEY (vacancy_id) REFERENCES Vacancies (id) ON DELETE CASCADE
+);

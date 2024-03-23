@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Query Results</title>
+</head>
+
+<body>
+    <h1>SQL Query Results</h1>
+    <button onclick="sendQuery()">Send Query</button>
+    <div id="table-container"></div>
+
+    <script>
+        async function sendQuery() {
+            const query = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';"; // Замените "your_table" на имя вашей таблицы
+            const response = await fetch("/api/sql", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ sql: query })
+            });
+            const data = await response.json();
+            console.log(data)
+            displayTable(data);
+        }
+
+        function displayTable(data) {
+            const tableContainer = document.getElementById("table-container");
+            const table = document.createElement("table");
+            const headerRow = document.createElement("tr");
+
+
+            for (const row of data.rows) {
+                const tr = document.createElement("tr");
+                for (const value of Object.values(row)) {
+                    const td = document.createElement("td");
+                    td.textContent = value;
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+            tableContainer.innerHTML = "";
+            tableContainer.appendChild(table);
+        }
+    </script>
+</body>
+
+</html>
