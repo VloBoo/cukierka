@@ -57,12 +57,12 @@
                                     <a class="nav-link" href="myvacancies.html">Мои вакансии</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="accounts.html">Аккаунт</a>
+                                    <a class="nav-link" id="nav-my-account" href="account.html">Аккаунт</a>
                                 </li>
                             </ul>
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a class="nav-link d-flex" href="login.html">
+                                    <a class="nav-link d-flex" onclick="exit()">
                                         <i class="far fa-user mr-2 tm-logout-icon"></i>
                                         <span>Выйти</span>
                                     </a>
@@ -128,18 +128,6 @@
                         </ol>
                     </div>
                 </div>
-                <div class="tm-col tm-col-big">
-                    <div class="bg-white tm-block h-100">
-                        <h2 class="tm-block-title">Calendar</h2>
-                        <div id="calendar"></div>
-                        <div class="row mt-4">
-                            <div class="col-12 text-right">
-                                <a href="#" class="tm-link-black">View Schedules</a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
                 <div class="tm-col tm-col-small">
                     <div class="bg-white tm-block h-100">
                         <h2 class="tm-block-title">Upcoming Tasks</h2>
@@ -175,8 +163,6 @@
     <!-- https://momentjs.com/ -->
     <script src="js/utils.js"></script>
     <script src="js/Chart.min.js"></script>
-    <!-- http://www.chartjs.org/docs/latest/ -->
-    <script src="js/fullcalendar.min.js"></script>
     <!-- https://fullcalendar.io/ -->
     <script src="js/bootstrap.min.js"></script>
     <!-- https://getbootstrap.com/ -->
@@ -200,7 +186,6 @@
             drawLineChart(); // Line Chart
             drawBarChart(); // Bar Chart
             drawPieChart(); // Pie Chart
-            drawCalendar(); // Calendar
             checkAuth();
 
             $(window).resize(function () {

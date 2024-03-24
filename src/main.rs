@@ -1,5 +1,6 @@
+use chrono::Utc;
 use serde_json::{json, Value};
-use std::{collections::HashMap, time::SystemTime, usize};
+use std::{collections::HashMap, usize};
 use tokio_postgres::NoTls;
 use uuid::Uuid;
 use warp::http::StatusCode;
@@ -59,7 +60,11 @@ async fn main() {
                         json!(value)
                     } else if let Ok(value) = row.try_get::<usize, Uuid>(i) {
                         json!(value.to_string())
-                    } else if let Ok(value) = row.try_get::<usize, SystemTime>(i) {
+                    } else if let Ok(value) = row.try_get::<usize, chrono::DateTime<Utc>>(i) {
+                        json!(value.to_rfc3339())
+                    } else if let Ok(value) = row.try_get::<usize, i32>(i) {
+                        json!(value)
+                    } else if let Ok(value) = row.try_get::<usize, Vec<String>>(i) {
                         json!(value)
                     } else if let Ok(value) = row.try_get::<usize, Value>(i) {
                         json!(value)
