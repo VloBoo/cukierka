@@ -1,44 +1,15 @@
 const width_threshold = 480;
 
-async function sendSql(sql) {
-  const response = await fetch("/api/sql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ sql: sql })
-  });
-  const data = await response.json();
-  return data;
-}
-
-
-async function drawLineChart() {
+function drawLineChart() {
   if ($("#lineChart").length) {
     ctxLine = document.getElementById("lineChart").getContext("2d");
-
-    // Fetch data for line chart
-    const lineChartData = await sendSql("SELECT * FROM CountVacanciesResponsesResumesByDay");
-
-    const vacancyHits = [];
-    const responseHits = [];
-    const resumeHits = [];
-    const labels = [];
-
-    lineChartData.rows.forEach(row => {
-      vacancyHits.push(row.vacancy_count);
-      responseHits.push(row.response_count);
-      resumeHits.push(row.resume_count);
-      labels.push(row.week_start);
-    });
-
     optionsLine = {
       scales: {
         yAxes: [
           {
             scaleLabel: {
               display: true,
-              labelString: "Count"
+              labelString: "Hits"
             }
           }
         ]
@@ -46,32 +17,41 @@ async function drawLineChart() {
     };
 
     // Set aspect ratio based on window width
-    optionsLine.maintainAspectRatio = $(window).width() < width_threshold ? false : true;
+    optionsLine.maintainAspectRatio =
+      $(window).width() < width_threshold ? false : true;
 
     configLine = {
       type: "line",
       data: {
-        labels: labels,
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July"
+        ],
         datasets: [
           {
-            label: "Vacancy Hits",
-            data: vacancyHits,
+            label: "Latest Hits",
+            data: [88, 68, 79, 57, 56, 55, 70],
             fill: false,
             borderColor: "rgb(75, 192, 192)",
             lineTension: 0.1
           },
           {
-            label: "Resume Hits",
-            data: resumeHits,
+            label: "Popular Hits",
+            data: [33, 45, 37, 21, 55, 74, 69],
             fill: false,
             borderColor: "rgba(255,99,132,1)",
             lineTension: 0.1
           },
           {
-            label: "Response Hits",
-            data: responseHits,
+            label: "Featured",
+            data: [44, 19, 38, 46, 85, 66, 79],
             fill: false,
-            borderColor: "rgba(99,255,132,1)",
+            borderColor: "rgba(153, 102, 255, 1)",
             lineTension: 0.1
           }
         ]
@@ -79,26 +59,13 @@ async function drawLineChart() {
       options: optionsLine
     };
 
-    console.log(configLine);
-
     lineChart = new Chart(ctxLine, configLine);
   }
 }
 
-async function drawBarChart() {
+function drawBarChart() {
   if ($("#barChart").length) {
     ctxBar = document.getElementById("barChart").getContext("2d");
-
-    // Fetch data for bar chart
-    const barChartData = await sendSql("SELECT * FROM Top10PopularSkills");
-
-    const skillLabels = [];
-    const skillCounts = [];
-
-    barChartData.rows.forEach(row => {
-      skillLabels.push(row.skill);
-      skillCounts.push(row.skill_count);
-    });
 
     optionsBar = {
       responsive: true,
@@ -110,23 +77,24 @@ async function drawBarChart() {
             },
             scaleLabel: {
               display: true,
-              labelString: "Count"
+              labelString: "Hits"
             }
           }
         ]
       }
     };
 
-    optionsBar.maintainAspectRatio = $(window).width() < width_threshold ? false : true;
+    optionsBar.maintainAspectRatio =
+      $(window).width() < width_threshold ? false : true;
 
     configBar = {
       type: "bar",
       data: {
-        labels: skillLabels,
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
         datasets: [
           {
-            label: "Skill Count",
-            data: skillCounts,
+            label: "# of Hits",
+            data: [12, 19, 3, 5, 2, 3],
             backgroundColor: [
               "rgba(255, 99, 132, 0.2)",
               "rgba(54, 162, 235, 0.2)",
@@ -154,16 +122,9 @@ async function drawBarChart() {
   }
 }
 
-async function drawPieChart() {
+function drawPieChart() {
   if ($("#pieChart").length) {
     ctxPie = document.getElementById("pieChart").getContext("2d");
-
-    // Fetch data for pie chart
-    const pieChartData = await sendSql("SELECT * FROM CountVacanciesResumes");
-
-    const data_count = [pieChartData.rows[0].vacancy_count, pieChartData.rows[0].resume_count]
-    const labels = ["Vacancy Count", "Resume Count"];
-
     optionsPie = {
       responsive: true,
       maintainAspectRatio: false
@@ -174,12 +135,15 @@ async function drawPieChart() {
       data: {
         datasets: [
           {
-            data: data_count,
-            backgroundColor: ["rgba(54, 162, 235, 0.4)", "rgba(255, 206, 86, 0.4)"],
-            label: "All"
+            data: [4600, 5400],
+            backgroundColor: [
+              window.chartColors.purple,
+              window.chartColors.green
+            ],
+            label: "Storage"
           }
         ],
-        labels: labels
+        labels: ["Used: 4,600 GB", "Available: 5,400 GB"]
       },
       options: optionsPie
     };
@@ -221,7 +185,7 @@ function updateBarChart() {
 }
 
 function reloadPage() {
-  setTimeout(function () {
+  setTimeout(function() {
     window.location.reload();
   }); // Reload the page so that charts will display correctly
 }

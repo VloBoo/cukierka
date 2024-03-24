@@ -64,6 +64,10 @@ async fn main() {
                         json!(value.to_rfc3339())
                     } else if let Ok(value) = row.try_get::<usize, i32>(i) {
                         json!(value)
+                    } else if let Ok(value) = row.try_get::<usize, i8>(i) {
+                        json!(value)
+                    } else if let Ok(value) = row.try_get::<usize, i64>(i) {
+                        json!(value)
                     } else if let Ok(value) = row.try_get::<usize, Vec<String>>(i) {
                         json!(value)
                     } else if let Ok(value) = row.try_get::<usize, Value>(i) {
