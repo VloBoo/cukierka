@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Records</title>
+</head>
+
+<body>
+    <h1>Add Records</h1>
+
+    <h2>Add Record to Resumes</h2>
+    <form id="addResumesForm">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <label for="body">Body:</label><br>
+        <input type="text" id="body" name="body"><br>
+        <label for="payment">Payment:</label><br>
+        <input type="number" id="payment" name="payment"><br>
+        <label for="skill">Skill:</label><br>
+        <input type="text" id="skill" name="skill"><br>
+        <button type="submit">Add Resume</button>
+    </form>
+
+    <h2>Add Record to Users</h2>
+    <form id="addUsersForm">
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="firstname">First Name:</label><br>
+        <input type="text" id="firstname" name="firstname"><br>
+        <label for="secondname">Second Name:</label><br>
+        <input type="text" id="secondname" name="secondname"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br>
+        <label for="resume_id">Resume:</label><br>
+        <select id="resume_id" name="resume_id">
+            <!-- Resumes will be dynamically loaded here -->
+        </select><br>
+        <label for="type">Type:</label><br>
+        <input type="text" id="type" name="type"><br>
+        <button type="submit">Add User</button>
+    </form>
+
+    <h2>Add Record to Vacancies</h2>
+    <form id="addVacanciesForm">
+        <label for="user_id">User:</label><br>
+        <select id="user_id" name="user_id">
+            <!-- Users will be dynamically loaded here -->
+        </select><br>
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <label for="body">Body:</label><br>
+        <input type="text" id="body" name="body"><br>
+        <label for="payment">Payment:</label><br>
+        <input type="number" id="payment" name="payment"><br>
+        <label for="skill">Skill:</label><br>
+        <input type="text" id="skill" name="skill"><br>
+        <button type="submit">Add Vacancy</button>
+    </form>
+
+    <h2>Add Record to Responses</h2>
+    <form id="addResponsesForm">
+        <label for="user_id">User:</label><br>
+        <select id="user_id" name="user_id">
+            <!-- Users will be dynamically loaded here -->
+        </select><br>
+        <label for="vacancy_id">Vacancy:</label><br>
+        <select id="vacancy_id" name="vacancy_id">
+            <!-- Vacancies will be dynamically loaded here -->
+        </select><br>
+        <label for="body">Body:</label><br>
+        <input type="text" id="body" name="body"><br>
+        <button type="submit">Add Response</button>
+    </form>
+
+    <script src="add_record.js"></script>
+</body>
+
+</html>
