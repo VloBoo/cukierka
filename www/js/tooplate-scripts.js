@@ -79,8 +79,6 @@ async function drawLineChart() {
       options: optionsLine
     };
 
-    console.log(configLine);
-
     lineChart = new Chart(ctxLine, configLine);
   }
 }

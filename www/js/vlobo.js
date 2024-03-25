@@ -77,7 +77,14 @@ async function checkAuth() {
     } else {
         user = result.rows[0];
         document.getElementById("nav-my-account").href = "account.html?id=" + user.id;
-        console.log(document.getElementById("nav-my-account").href)
+        if (user.resume_id == null) {
+            document.getElementById("nav-resume").href = "resume-add.html";
+        }else{
+            document.getElementById("nav-resume").href = "resume.html?id=" + user.resume_id;
+        }
+        if (user.type == 'a') {
+            document.getElementById("nav-table-block").style.display = "block";
+        }
     }
 }
 
@@ -114,6 +121,34 @@ async function userload() {
             document.getElementById("email").value = account.email;
             document.getElementById("usertype").value = account.type;
             document.getElementById("datecreated").value = account.created;
+        } else {
+            window.location.href = "404";
+        }
+    } else {
+        alert("Не удалось выполнить операцию. Перепроверьте данные или попробуйте позже.")
+    }
+
+    let email = document.getElementById("email").value;
+    let firstname = document.getElementById("firstname").value;
+    let secondname = document.getElementById("secondname").value;
+    let usertype = document.getElementById("usertype").value;
+    let userId = await crypto.randomUUID();
+    let currentDate = new Date().toISOString();
+}
+
+async function resumeload() {
+    let id = await getQueryParam('id')
+    result = await sendSql(`SELECT * FROM Resumes WHERE id = '${id}'`);
+
+    if (result.error !== null && result.rows !== null) {
+        if (result.rows.length >= 1) {
+            resume = result.rows[0];
+            console.log(resume)
+            document.getElementById("title").value = resume.title;
+            document.getElementById("body").value = resume.body;
+            document.getElementById("payment").value = resume.payment;
+            document.getElementById("skill").value = resume.skill;
+            document.getElementById("datecreated").value = resume.created;
         } else {
             window.location.href = "404";
         }
