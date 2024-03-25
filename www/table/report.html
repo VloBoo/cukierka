@@ -1,14 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generate Report</title>
-</head>
-<body>
-    <h1>Generate Report</h1>
-    <button onclick="generateCSV()">Download CSV Report</button>
 
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
+    <!-- https://fonts.google.com/specimen/Open+Sans -->
+    <link rel="stylesheet" href="/css/fontawesome.min.css">
+    <!-- https://fontawesome.com/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- https://getbootstrap.com/ -->
+    <link rel="stylesheet" href="/css/tooplate.css">
+</head>
+
+<body class="bg03">
+    <div class="container">
+        <div class="row tm-mt-big">
+            <div class="col-12 mx-auto tm-login-col">
+                <div class="bg-white tm-block">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <i class="fas fa-3x fa-circle-notch tm-site-icon text-center"></i>
+                            <h2 class="tm-block-title mt-3">Генератор отчётов</h2>
+                        </div>
+                    </div>
+                    <div class="input-group mt-3">
+                        <button type="button" onclick="generateCSV()"
+                            class="btn btn-primary d-inline-block mx-auto">Скакачать CSV-файл</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="report.js"></script>
 </body>
+
 </html>

@@ -29,7 +29,7 @@ async function drawLineChart() {
       vacancyHits.push(row.vacancy_count);
       responseHits.push(row.response_count);
       resumeHits.push(row.resume_count);
-      labels.push(row.week_start);
+      labels.push(row.day);
     });
 
     optionsLine = {
@@ -38,7 +38,7 @@ async function drawLineChart() {
           {
             scaleLabel: {
               display: true,
-              labelString: "Count"
+              labelString: "Количество"
             }
           }
         ]
@@ -54,21 +54,21 @@ async function drawLineChart() {
         labels: labels,
         datasets: [
           {
-            label: "Vacancy Hits",
+            label: "Вакансии",
             data: vacancyHits,
             fill: false,
             borderColor: "rgb(75, 192, 192)",
             lineTension: 0.1
           },
           {
-            label: "Resume Hits",
+            label: "Резюме",
             data: resumeHits,
             fill: false,
             borderColor: "rgba(255,99,132,1)",
             lineTension: 0.1
           },
           {
-            label: "Response Hits",
+            label: "Откликов",
             data: responseHits,
             fill: false,
             borderColor: "rgba(99,255,132,1)",
@@ -110,7 +110,7 @@ async function drawBarChart() {
             },
             scaleLabel: {
               display: true,
-              labelString: "Count"
+              labelString: "Количество"
             }
           }
         ]
@@ -125,7 +125,7 @@ async function drawBarChart() {
         labels: skillLabels,
         datasets: [
           {
-            label: "Skill Count",
+            label: "Требуемые навыки",
             data: skillCounts,
             backgroundColor: [
               "rgba(255, 99, 132, 0.2)",
@@ -162,7 +162,7 @@ async function drawPieChart() {
     const pieChartData = await sendSql("SELECT * FROM CountVacanciesResumes");
 
     const data_count = [pieChartData.rows[0].vacancy_count, pieChartData.rows[0].resume_count]
-    const labels = ["Vacancy Count", "Resume Count"];
+    const labels = ["Количество вакансий", "Количество резюме"];
 
     optionsPie = {
       responsive: true,

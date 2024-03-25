@@ -79,7 +79,7 @@ document.getElementById('addResumesForm').addEventListener('submit', async funct
 
     const sql = `INSERT INTO Resumes (id, title, body, payment, skill, created) VALUES ('${data.id}', '${data.title}', '${data.body}', '${data.payment}', ARRAY['${data.skill}']::VARCHAR[], NOW())`;
     await sendSql(sql);
-    alert("Resume added successfully!");
+    alert("Запрос на добавление отправлен!");
 });
 
 // Add record to Users
@@ -97,7 +97,7 @@ document.getElementById('addUsersForm').addEventListener('submit', async functio
 
     const sql = `INSERT INTO Users (id, email, firstname, secondname, password, resume_id, type, created) VALUES ('${userId}', '${data.email}', '${data.firstname}', '${data.secondname}', '${data.password}', '${data.resume_id}', '${data.type}', NOW())`;
     await sendSql(sql);
-    alert("User added successfully!");
+    alert("Запрос на добавление отправлен!");
 });
 
 // Add record to Vacancies
@@ -115,7 +115,7 @@ document.getElementById('addVacanciesForm').addEventListener('submit', async fun
 
     const sql = `INSERT INTO Vacancies (id, user_id, title, body, payment, skill, created) VALUES ('${vacancyId}', '${data.user_id}', '${data.title}', '${data.body}', '${data.payment}', ARRAY['${data.skill}']::VARCHAR[], NOW())`;
     await sendSql(sql);
-    alert("Vacancy added successfully!");
+    alert("Запрос на добавление отправлен!");
 });
 
 // Add record to Responses
@@ -133,6 +133,6 @@ document.getElementById('addResponsesForm').addEventListener('submit', async fun
 
     const sql = `INSERT INTO Responses (id, user_id, vacancy_id, body, created) VALUES ('${responseId}', '${data.user_id}', '${data.vacancy_id}', '${data.body}', NOW())`;
     await sendSql(sql);
-    alert("Response added successfully!");
+    alert("Запрос на добавление отправлен!");
 });
 

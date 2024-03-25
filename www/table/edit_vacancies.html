@@ -1,29 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Vacancies</title>
+    <title>Вакансии</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
+    <!-- https://fonts.google.com/specimen/Open+Sans -->
+    <link rel="stylesheet" href="/css/fontawesome.min.css">
+    <!-- https://fontawesome.com/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- https://getbootstrap.com/ -->
+    <link rel="stylesheet" href="/css/tooplate.css">
 </head>
-<body>
-    <h1>Edit Vacancies</h1>
-    <table id="vacanciesTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>User ID</th>
-                <th>Title</th>
-                <th>Body</th>
-                <th>Payment</th>
-                <th>Skill</th>
-                <th>Created</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="vacanciesTableBody">
-            <!-- Vacancies will be dynamically loaded here -->
-        </tbody>
-    </table>
+
+<body class="bg03 fs14">
+    <div class="container">
+        <div class="row tm-mt-big">
+            <div class="bg-white mx-auto tm-block">
+                <h1>Вакансии</h1>
+                <table id="vacanciesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Пользователь</th>
+                            <th>Заголовок</th>
+                            <th>Содержимое</th>
+                            <th>Зарплата</th>
+                            <th>Навыки</th>
+                            <th>Создано</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vacanciesTableBody">
+                        <!-- Vacancies will be dynamically loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <script src="edit_vacancies.js"></script>
 </body>
+
 </html>

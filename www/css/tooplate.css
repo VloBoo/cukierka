@@ -40,6 +40,10 @@ body {
 	background-image: url(../img/background.png);
 }
 
+.fs14{
+  font-size: 14px;
+}
+
 a {
   transition: all 0.3s ease;
 }
