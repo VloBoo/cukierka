@@ -88,7 +88,7 @@ document.getElementById('addUsersForm').addEventListener('submit', async functio
 
     const formData = new FormData(this);
     const data = {};
-    formData.forEach((value, key) => {
+    formData.forEach((value, key) => {сф
         data[key] = value;
     });
 
