@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx
+    container_name: cukierka-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /usr/share/cukierka/nginx:/etc/nginx
+      - /usr/share/cukierka/ssl:/etc/nginx/ssl
+      - /var/cukierka/log/nginx:/var/log/nginx
+      - /var/cukierka/cdn:/var/cdn
+      - /var/cukierka/www:/var/www
+    restart: always
+  
+  db:
+    image: postgres
+    container_name: cukierka-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/cukierka/db:/var/lib/postgresql/data
+      - /var/cukierka/log/db:/var/log/postgresql
+    environment:
+      POSTGRES_USER: akreikuc
+      POSTGRES_PASSWORD: ackurkeiiekrukca
+      POSTGRES_DB: cukierka
+    restart: always
+
