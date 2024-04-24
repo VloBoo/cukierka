@@ -4,12 +4,17 @@ version = "0.4.0"
 edition = "2021"
 
 [dependencies]
-chrono = "0.4.35"
-ctrlc = "3.4.2"
+chrono = "0.4.38"
 log = "0.4.20"
 pretty_env_logger = "0.5.0"
 serde_json = "1.0.113"
+sqlx = { version = "0.7", features = [
+    "postgres",
+    "runtime-tokio-rustls",
+    "uuid",
+    "chrono",
+    "json",
+] }
 tokio = { version = "1", features = ["full"] }
-tokio-postgres = {version = "0.7", features = ["with-uuid-1", "with-serde_json-1", "with-chrono-0_4"] }
 uuid = "1.7.0"
 warp = { version = "0.3", features = ["tls"] }
