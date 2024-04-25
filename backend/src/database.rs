@@ -6,7 +6,7 @@ use std::error::Error;
 use uuid::Uuid;
 
 pub struct Database {
-    pool: Pool<Postgres>,
+    pub pool: Pool<Postgres>,
 }
 
 impl Database {

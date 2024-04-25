@@ -1,48 +1,44 @@
-use serde_json::json;
-use std::collections::HashMap;
+use crate::database::Database;
+use std::{error::Error, sync::Arc};
+use tokio::sync::Mutex;
+use uuid::Uuid;
 use warp::Filter;
 
-use crate::database::Database;
-
+mod api;
+mod apitool;
 mod database;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn Error>> {
     pretty_env_logger::formatted_timed_builder()
         .filter_level(log::LevelFilter::Debug)
         .init();
 
-    log::info!("{:?}", Database::hardsql("SELECT 1 + 1 as sum").await);
+    let lock_db = Arc::new(Mutex::new(Database::new().await?));
 
-    let sql_proxy = warp::path("sql").and(warp::body::json()).and_then(
-        |simple_map: HashMap<String, String>| async move {
-            let sql = match simple_map.get("sql") {
-                Some(sql) => sql,
-                None => {
-                    log::error!("Строка запроса не найдена \n {:?}", simple_map);
-                    panic!("Строка запроса не найдена!");
-                }
-            };
+    let lock_db_clone1 = lock_db.clone();
+    let sql = warp::path!("api" / "user" / Uuid)
+        .and(warp::get())
+        .and_then(move |id: Uuid| {
+            let cloned = lock_db_clone1.clone();
+            async move { api::get_user(id, cloned).await }
+        });
 
-            log::info!("{}", sql);
+    let lock_db_clone2 = lock_db.clone();
+    let sql2 = warp::path!("api" / "user")
+        .and(warp::post())
+        .and(warp::body::json())
+        .and_then(move |req_json| {
+            let cloned = lock_db_clone2.clone();
+            async move { api::create_user(req_json, cloned).await }
+        });
 
-            let result = Database::hardsql(sql).await.unwrap();
-
-            Ok::<_, warp::Rejection>(warp::reply::json(&result))
-        },
-    );
-
-    let api_also = warp::any().and_then(|| async move {
-        Ok::<_, warp::Rejection>(warp::reply::json(&json!({"error":"404. Not Found."})))
-    });
-
-    let final_warp =
-        warp::any().and(warp::post().and(warp::path("api").and(sql_proxy).or(api_also)));
-
-    warp::serve(final_warp)
+    warp::serve(sql2.or(sql))
         //.tls()
         // .cert_path("secret/cert.crt")
         // .key_path("secret/key.rsa")
-        .run(([0, 0, 0, 0], 80))
+        .run(([0, 0, 0, 0], 8081))
         .await;
+
+    return Ok(());
 }
