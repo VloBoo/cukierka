@@ -69,7 +69,10 @@ CREATE TABLE Messages(
 CREATE TABLE Comments(
     id UUID PRIMARY KEY,
     author_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+    rate INT NOT NULL,
     content VARCHAR NOT NULL,
     created TIMESTAMPTZ NOT NULL,
     FOREIGN KEY (author_id) REFERENCES Users (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
 );
