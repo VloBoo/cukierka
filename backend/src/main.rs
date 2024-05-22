@@ -12,7 +12,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .filter_level(log::LevelFilter::Debug)
         .init();
 
-    let lock_db = Arc::new(Mutex::new(Database::new().await?));
+    let lock_db = Arc::new(Mutex::new(
+        Database::new()
+            .await
+            .inspect_err(|e| log::error!("{:?}", e))?,
+    ));
 
     warp::serve(route::route(lock_db))
         //.tls()
