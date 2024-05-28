@@ -36,16 +36,22 @@ pub async fn create(
     token: Uuid,
     db: Arc<Mutex<Database>>,
 ) -> Result<impl warp::Reply, warp::Rejection> {
+    let Some(user_id) = apitool::check_token(db.clone(), token).await else {
+        return Ok(warp::reply::json(&DeleteResponse {
+            status: "Не удалось проверить авторизацию пользователя".to_string(),
+        }));
+    };
+
     let db_lock = db.lock().await;
 
     match sqlx::query(
         "INSERT INTO Comments 
         (id, author_id, user_id, rate, content, create) 
-        VALUES ($1, (SELECT user_id FROM Tokens WHERE id = $2), $3, $4, $5, $6) 
+        VALUES ($1, ($2, $3, $4, $5, $6) 
         RETURNING id",
     )
     .bind(uuid::Uuid::new_v4())
-    .bind(token)
+    .bind(user_id)
     .bind(req_json.user_id)
     .bind(req_json.rate)
     .bind(req_json.content)
@@ -103,6 +109,51 @@ pub async fn get(
             let res = GetResponse {
                 status: "error".to_string(),
                 comment: None,
+            };
+            Ok(warp::reply::json(&res))
+        }
+    }
+}
+
+//
+// Delete Message
+//
+
+#[derive(serde::Serialize)]
+pub struct DeleteResponse {
+    status: String,
+}
+pub async fn delete(
+    id: Uuid,
+    token: Uuid,
+    db: Arc<Mutex<Database>>,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    let Some(user_id) = apitool::check_token(db.clone(), token).await else {
+        return Ok(warp::reply::json(&DeleteResponse {
+            status: "Не удалось проверить авторизацию пользователя".to_string(),
+        }));
+    };
+
+    let db_lock = db.lock().await;
+
+    match sqlx::query(
+        "DELETE FROM Comments WHERE id = $1 and author_id = $2",
+    )
+    .bind(id)
+    .bind(user_id)
+    .fetch_one(&db_lock.pool)
+    .await
+    {
+        Ok(_) => {
+            let res = DeleteResponse {
+                status: "ok".to_string(),
+            };
+            Ok(warp::reply::json(&res))
+        }
+        Err(error) => {
+            log::error!("{:?}", error);
+            let res = DeleteResponse {
+                status: error.to_string(),
             };
             Ok(warp::reply::json(&res))
         }

@@ -35,7 +35,7 @@ pub async fn create(
 
     match sqlx::query(
         "INSERT INTO Tokens (id, user_id, created) 
-        VALUES ($1, (SELECT id FROM Users WHERE email = $2 AND password = $3), $4) 
+        VALUES ($1, (SELECT id FROM Users WHERE email = $2 AND password = $3 LIMIT 1), $4) 
         RETURNING id;",
     )
     .bind(uuid::Uuid::new_v4())
@@ -55,7 +55,7 @@ pub async fn create(
         Err(error) => {
             log::error!("{:?}", error);
             let res = CreateResponse {
-                status: "error".to_string(),
+                status: error.to_string(),
                 token: None,
             };
             Ok(warp::reply::json(&res))
@@ -93,10 +93,42 @@ pub async fn get(
         Err(error) => {
             log::error!("{:?}", error);
             let res = GetResponse {
-                status: "error".to_string(),
+                status: error.to_string(),
                 token: None,
             };
             Ok(warp::reply::json(&res))
+        }
+    }
+}
+
+//
+// Delete Token
+//
+
+#[derive(serde::Serialize)]
+pub struct DeleteResponse {
+    status: String,
+}
+
+pub async fn delete(
+    token: Uuid,
+    db: Arc<Mutex<Database>>,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    let db_lock = db.lock().await;
+
+    match sqlx::query("DELETE FROM Tokens WHERE id = $1")
+        .bind(token)
+        .execute(&db_lock.pool)
+        .await
+    {
+        Ok(_) => Ok(warp::reply::json(&DeleteResponse {
+            status: "ok".to_string(),
+        })),
+        Err(error) => {
+            log::error!("{:?}", error);
+            Ok(warp::reply::json(&DeleteResponse {
+                status: error.to_string(),
+            }))
         }
     }
 }

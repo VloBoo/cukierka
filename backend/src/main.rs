@@ -1,5 +1,5 @@
 use crate::database::Database;
-use std::{error::Error, sync::Arc};
+use std::{error::Error, net::IpAddr, str::FromStr, sync::Arc};
 use tokio::sync::Mutex;
 
 mod api;
@@ -18,11 +18,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .inspect_err(|e| log::error!("{:?}", e))?,
     ));
 
+    let addr = IpAddr::from_str("::0").unwrap();
+
     warp::serve(route::route(lock_db))
         //.tls()
         // .cert_path("secret/cert.crt")
         // .key_path("secret/key.rsa")
-        .run(([0, 0, 0, 0], 4444))
+        .run((addr, 4444))
         .await;
 
     return Ok(());

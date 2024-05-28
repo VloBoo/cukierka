@@ -4,8 +4,12 @@ use serde_json::Value;
 use sqlx::postgres::PgRow;
 use sqlx::Column;
 use sqlx::Row;
+use tokio::sync::Mutex;
 use std::error::Error;
+use std::sync::Arc;
 use uuid::Uuid;
+
+use crate::database::Database;
 
 pub fn row_to_value(row: &PgRow) -> Result<Value, Box<dyn Error>> {
     let mut row_json = serde_json::Map::new();
@@ -36,4 +40,16 @@ pub fn row_to_value(row: &PgRow) -> Result<Value, Box<dyn Error>> {
         row_json.insert(column_name.into(), value);
     }
     Ok(serde_json::to_value(row_json)?)
+}
+
+pub async fn check_token(db: Arc<Mutex<Database>>, token: Uuid) -> Option<Uuid> {
+    let db_lock = db.lock().await;
+    match sqlx::query("SELECT user_id FROM Tokens WHERE id = $1")
+        .bind(token)
+        .fetch_one(&db_lock.pool)
+        .await
+    {
+        Ok(row) => row.try_get("user_id").ok(),
+        Err(_) => None,
+    }
 }
