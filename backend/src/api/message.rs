@@ -23,7 +23,6 @@ pub struct Message {
 pub struct CreateRequest {
     pub project_id: Uuid,
     pub content: String,
-    pub rate: i32,
 }
 #[derive(serde::Serialize)]
 pub struct CreateResponse {

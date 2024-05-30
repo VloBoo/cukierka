@@ -45,7 +45,7 @@ pub async fn create(
     match sqlx::query(
         "INSERT INTO Projects
             (id, user_id, vacancy_id, created) 
-            SELECT $1, (SELECT id FROM Responses WHERE id = $4 AND vacancy_id = $3 LIMIT 1), $3, $5
+            SELECT $1, (SELECT user_id FROM Responses WHERE id = $4 AND vacancy_id = $3 LIMIT 1), $3, $5
             FROM Vacancies v
             WHERE v.id = $3 AND v.author_id = $2
             RETURNING id;",

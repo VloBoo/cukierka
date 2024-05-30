@@ -78,7 +78,7 @@ pub async fn get(
 ) -> Result<impl warp::Reply, warp::Rejection> {
     let db_lock = db.lock().await;
 
-    match sqlx::query("SELECT * FROM Token WHERE id = $1")
+    match sqlx::query("SELECT * FROM Tokens WHERE id = $1")
         .bind(id)
         .fetch_one(&db_lock.pool)
         .await

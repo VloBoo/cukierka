@@ -123,7 +123,7 @@ pub(crate) fn route(
 
     let db_clone_search_vacancy = lock_db.clone();
     let warp_search_vacancy = warp::path!("api" / "vacancy" / "search")
-        .and(warp::get())
+        .and(warp::post())
         .and(warp::body::json())
         .and_then(move |req_json| {
             let cloned = db_clone_search_vacancy.clone();

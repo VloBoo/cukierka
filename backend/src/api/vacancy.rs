@@ -245,11 +245,12 @@ pub async fn search(
 ) -> Result<impl warp::Reply, warp::Rejection> {
     let db_lock = db.lock().await;
 
-    match sqlx::query(
+    match sqlx::query(&format!(
         "SELECT id FROM Vacancies 
-        WHERE title ILIKE '%' || $1 || '%' 
-        ORDER BY $2 $3",
-    )
+    WHERE title ILIKE '%' || $1 || '%' 
+    ORDER BY {} {};",
+        req_json.sort_by, req_json.order,
+    ))
     .bind(req_json.title)
     .bind(req_json.sort_by)
     .bind(req_json.order)

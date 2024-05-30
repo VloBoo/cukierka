@@ -46,9 +46,8 @@ pub async fn create(
 
     match sqlx::query(
         "INSERT INTO Comments 
-        (id, author_id, user_id, rate, content, create) 
-        VALUES ($1, ($2, $3, $4, $5, $6) 
-        RETURNING id",
+        (id, author_id, user_id, rate, content, created) 
+        VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;",
     )
     .bind(uuid::Uuid::new_v4())
     .bind(user_id)
@@ -69,7 +68,7 @@ pub async fn create(
         Err(error) => {
             log::error!("{:?}", error);
             let res = CreateResponse {
-                status: "error".to_string(),
+                status: error.to_string(),
                 comment: None,
             };
             Ok(warp::reply::json(&res))

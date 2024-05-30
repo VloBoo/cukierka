@@ -37,7 +37,7 @@ Tokens
         Endpoint: /token/
         Body: { 
             "email": "string",
-            "password": "password"
+            "password": "string"
         }
 
     Get Token by ID
@@ -84,7 +84,7 @@ Vacancies
         Endpoint: /vacancy/{id}
 
     Search Vacancies
-        Method: GET
+        Method: POST
         Endpoint: /vacancy/search/
         Body: { 
             "title": "string",        
@@ -160,7 +160,7 @@ Comments
         Endpoint: /comment/
         Header: "Token"
         Body: { 
-            "project_id": "UUID",
+            "user_id": "UUID",
             "rate": "integer", 
             "content": "string" 
         }
