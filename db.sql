@@ -63,3 +63,39 @@ CREATE TABLE Comments(
     FOREIGN KEY (author_id) REFERENCES Users (id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users (id) ON DELETE CASCADE
 );
+
+CREATE VIEW MonthlyVacancies AS
+SELECT
+    DATE_TRUNC('month', created) AS month,
+    COUNT(id) AS vacancy_count
+FROM
+    Vacancies
+GROUP BY
+    month
+ORDER BY
+    month;
+
+CREATE VIEW VacancyResponses AS
+SELECT
+    v.id AS vacancy_id,
+    v.title AS vacancy_title,
+    COUNT(r.id) AS response_count
+FROM
+    Vacancies v
+LEFT JOIN
+    Responses r ON v.id = r.vacancy_id
+GROUP BY
+    v.id, v.title
+ORDER BY
+    response_count DESC;
+
+CREATE VIEW VacancyStatusDistribution AS
+SELECT
+    status,
+    COUNT(id) AS status_count
+FROM
+    Vacancies
+GROUP BY
+    status
+ORDER BY
+    status_count DESC;
