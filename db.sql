@@ -1,7 +1,7 @@
 CREATE TABLE Users(
     id UUID PRIMARY KEY,
     name VARCHAR NOT NULL,
-    email VARCHAR NOT NULL,
+    email VARCHAR NOT NULL UNIQUE,
     password VARCHAR NOT NULL,
     information VARCHAR,
     created TIMESTAMPTZ NOT NULL
@@ -25,7 +25,7 @@ CREATE TABLE Vacancies(
     FOREIGN KEY (author_id) REFERENCES Users (id) ON DELETE CASCADE
 );
 
-CREATE TABLE Responses(
+CREATE TABLE Tickets(
     id UUID PRIMARY KEY,
     user_id UUID NOT NULL,
     vacancy_id UUID NOT NULL,

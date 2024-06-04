@@ -13,7 +13,7 @@ impl Database {
     pub async fn new() -> Result<Database, Box<dyn Error>> {
         let connection_str = "postgres://akreikuc:ackurkeiiekrukca@vlobo.site:4445/cukierka";
         let pool = PgPool::connect(connection_str).await?;
-        log::debug!("ok");
+        log::info!("open connection with database");
         Ok(Database { pool })
     }
 

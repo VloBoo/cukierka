@@ -1,15 +1,15 @@
+use axum::http::HeaderMap;
 use chrono::Utc;
 use serde_json::json;
 use serde_json::Value;
 use sqlx::postgres::PgRow;
 use sqlx::Column;
+use sqlx::Pool;
+use sqlx::Postgres;
 use sqlx::Row;
-use tokio::sync::Mutex;
 use std::error::Error;
-use std::sync::Arc;
+use std::str::FromStr;
 use uuid::Uuid;
-
-use crate::database::Database;
 
 pub fn row_to_value(row: &PgRow) -> Result<Value, Box<dyn Error>> {
     let mut row_json = serde_json::Map::new();
@@ -42,11 +42,11 @@ pub fn row_to_value(row: &PgRow) -> Result<Value, Box<dyn Error>> {
     Ok(serde_json::to_value(row_json)?)
 }
 
-pub async fn check_token(db: Arc<Mutex<Database>>, token: Uuid) -> Option<Uuid> {
-    let db_lock = db.lock().await;
+pub async fn check_token(dbx: &Pool<Postgres>, headers: HeaderMap) -> Option<Uuid> {
+    let token = Uuid::from_str(headers.get("token").unwrap().to_str().unwrap()).unwrap();
     match sqlx::query("SELECT user_id FROM Tokens WHERE id = $1")
         .bind(token)
-        .fetch_one(&db_lock.pool)
+        .fetch_one(dbx)
         .await
     {
         Ok(row) => row.try_get("user_id").ok(),
