@@ -16,7 +16,7 @@ pub(crate) fn route(dbx: Pool<Postgres>) -> Router {
         //user
         .route("/user", post(api::user::create))
         .route("/user/:id", get(api::user::get))
-        // FUCK AXUM .route("/user/:id", put(api::user::update))
+        .route("/user/:id", put(api::user::update))
         .route("/user/:id", delete(api::user::delete));
 
     Router::new()

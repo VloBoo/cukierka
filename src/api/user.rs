@@ -6,6 +6,7 @@ use axum::{
     Json,
 };
 use chrono::Utc;
+use serde_json::json;
 use sqlx::Row;
 use sqlx::{Pool, Postgres};
 use uuid::Uuid;
@@ -111,8 +112,8 @@ pub struct UpdateResponseParams {
 pub async fn update(
     Path(id): Path<Uuid>,
     headers: HeaderMap,
-    Json(params): Json<UpdateRequestParams>,
     State(dbx): State<Pool<Postgres>>,
+    Json(params): Json<UpdateRequestParams>,
 ) -> impl IntoResponse {
     let Some(user_id) = apitool::check_token(&dbx, headers).await else {
         return Json(UpdateResponseParams {
