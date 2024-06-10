@@ -1,0 +1,175 @@
+Users
+
+    Create User
+        Method: POST
+        Endpoint: /user/
+        Body: {
+            "name": "string",
+            "email": "string",
+            "password": "string",
+            "information": "string"
+        }
+
+    Get User by ID
+        Method: GET
+        Endpoint: /user/{id}
+
+    Update User
+        Method: PUT
+        Endpoint: /user/{id}
+        Header: "Token"
+        Body: { 
+            "name": "string", 
+            "email": "string", 
+            "password": "string", 
+            "information": "string" 
+            }
+
+    Delete User
+        Method: DELETE
+        Endpoint: /user/{id}
+        Header: "Token"
+
+Tokens
+
+    Create Token
+        Method: POST
+        Endpoint: /token/
+        Body: { 
+            "email": "string",
+            "password": "string"
+        }
+
+    Get Token by ID
+        Method: GET
+        Endpoint: /token/{id}
+
+    Delete Token
+        Method: DELETE
+        Header: "Token"
+        Endpoint: /token/
+
+
+Vacancies
+
+    Create Vacancy
+        Method: POST
+        Endpoint: /vacancy/
+        Header: "Token"
+        Body: { 
+            "title": "string",
+            "information": "string",
+            "payment": "integer", 
+            "status": "string" 
+        }
+
+    Get Vacancy by ID
+        Method: GET
+        Endpoint: /vacancy/{id}
+
+    Update Vacancy
+        Method: PUT
+        Endpoint: /vacancy/{id}
+        Header: "Token"
+        Body: {
+            "title": "string",
+            "information": "string",
+            "payment": "integer",
+            "status": "string"
+        }
+
+    Delete Vacancy
+        Method: DELETE
+        Header: "Token"
+        Endpoint: /vacancy/{id}
+
+    Search Vacancies
+        Method: POST
+        Endpoint: /vacancy/search/
+        Body: { 
+            "title": "string",        
+            "sort_by": "string",       
+            "order": "string"          
+        }
+
+Responses
+
+    Create Response
+        Method: POST
+        Endpoint: /response/
+        Header: "Token"
+        Body: { 
+            "vacancy_id": "UUID" 
+        }
+
+    Get Response by ID
+        Method: GET
+        Endpoint: /response/{id}
+
+    Delete Response
+        Method: DELETE
+        Endpoint: /response/{id}
+        Header: "Token"
+
+Projects
+
+    Create Project
+        Method: POST
+        Endpoint: /project/
+        Header: "Token"
+        Body: { 
+            "response_id": "UUID", 
+            "vacancy_id": "UUID" 
+        }
+
+    Get Project by ID
+        Method: GET
+        Endpoint: /project/{id}
+        Header: "Token"
+
+    Delete Project
+        Method: DELETE
+        Endpoint: /project/{id}
+        Header: "Token"
+
+Messages
+
+    Create Message
+        Method: POST
+        Endpoint: /message/
+        Header: "Token"
+        Body: { 
+            "project_id": "UUID", 
+            "content": "string" 
+        }
+
+    Get Message by ID
+        Method: GET
+        Endpoint: /message/{id}
+        Header: "Token"
+
+    Delete Message
+        Method: DELETE
+        Endpoint: /message/{id}
+        Header: "Token"
+
+Comments
+
+    Create Comment
+        Method: POST
+        Endpoint: /comment/
+        Header: "Token"
+        Body: { 
+            "user_id": "UUID",
+            "rate": "integer", 
+            "content": "string" 
+        }
+
+    Get Comment by ID
+        Method: GET
+        Endpoint: /comment/{id}
+
+    Delete Comment
+        Method: DELETE
+        Endpoint: /comment/{id}
+        Header: "Token"
