@@ -6,7 +6,6 @@ use axum::{
     Json,
 };
 use chrono::Utc;
-use serde_json::json;
 use sqlx::Row;
 use sqlx::{Pool, Postgres};
 use uuid::Uuid;
